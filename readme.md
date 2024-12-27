@@ -1,4 +1,7 @@
-# ADORE REDCap Update
+# ADORE REDCap
+
+Note - this repository does not, and should never, contain Protected Health Information.
+
 
 This page accompanies [Adore_clin_data](https://redcap.uky.edu/redcap/redcap_v14.8.2/index.php?pid=22540), a REDCap-based project holding clinical data and counts of biospecimens associated with the ADORE biobank.
 
@@ -86,6 +89,15 @@ If you need help running Python code in a defined environment, see [howtos_Pytho
 + Check for the success page<br>
 <img src = "doc_images/redcap_upload_success_final.png" width=50%>
 
+## Transfer from legacy system
 
+[Adore_clin_data](https://redcap.uky.edu/redcap/redcap_v14.8.2/index.php?pid=22540) was created from the legacy [ADORE Clinical Data](https://redcap.uky.edu/redcap/redcap_v14.8.2/index.php?pid=17918) as follows.
 
++ Legacy data were exported from REDCap in labeled csv format
+
++ Variable names for the new REDCap system were extracted from the data import template and saved as a text file.
+
++ These two filenames were set at the top of `<repo>/Python_code/create_import_from_orig_data.py`
+
++ Running this file created a new csv file that could be imported manually into REDCap to initialise the system.
 
