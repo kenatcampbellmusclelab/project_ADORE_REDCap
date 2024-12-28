@@ -10,8 +10,6 @@ import sys
 import json
 import re
 
-import requests
-
 import numpy as np
 import pandas as pd
 
@@ -183,6 +181,12 @@ def count_patient_samples(d_redcap, d_oncore, output_folder):
     col_names = ['record_id', 'demo_uk_mrn']
     for ty in sample_types:
         for se in sample_events:
+            
+            # Check for sample types that can only be at 0 months or unmatched
+            if ((not (ty in blood_sample_types)) and
+                (not (se in ['0_months_arm_1', 'Unmatched']))):
+                continue
+            
             for st in specimen_statuses:
                 # Work out the event string
                 under_ind = [i for i, c in enumerate(se) if (c == '_')]
@@ -209,6 +213,12 @@ def count_patient_samples(d_redcap, d_oncore, output_folder):
         # Now cycle through the type / event / status combination
         for ty in sample_types:
             for se in sample_events:
+                
+                # Check for sample types that can only be at 0 months or unmatched
+                if ((not (ty in blood_sample_types)) and
+                    (not (se in ['0_months_arm_1', 'Unmatched']))):
+                    continue
+                
                 for st in specimen_statuses:
 
                     d_match = d_oncore[(d_oncore['Patient ID'] == uk_mrn) &
