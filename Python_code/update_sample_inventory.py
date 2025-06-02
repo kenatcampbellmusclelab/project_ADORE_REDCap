@@ -64,12 +64,24 @@ def return_OnCore_data(oncore_file_string):
     
     # Read in data, keeping leading zeros on MRN
     d = pd.read_csv(oncore_file_string, converters={'Patient ID': str})
-    
+     
+    # Tidy mrns
+    for i in range(len(d)):
+        d['Patient ID'].iat[i] = tidy_mrn(d['Patient ID'].iloc[i])
+ 
     # Restrict to needed columns
     d = d[columns_to_keep]
-    
+ 
     # Convert dates
     d = convert_series_to_datetimes(d)
+    
+    
+    print('len d: %i' % len(d))
+    
+    # Drop the deaccesioned samples
+    bi = d[d['Specimen Status'] == 'Deaccessioned'].index
+    d = d.drop(bi)    
+    d = d.reset_index()
     
     # Set the sample type
     d['ADORE sample type'] = ''
@@ -103,6 +115,8 @@ def deduce_sample_event(d_redcap, d_oncore, output_folder,
     # Find the event_names in redcap
     all_event_names = d_redcap['redcap_event_name'].unique()
     sample_events = [x for x in all_event_names if ('months' in x)]
+    
+    print(sample_events)
     
     # Add some columns to d_oncore
     d_oncore['REDCap_patient_found'] = False
@@ -292,6 +306,17 @@ def convert_series_to_datetimes(d):
             d[c] = pd.to_datetime(d[c])
     
     return d
+
+def tidy_mrn(mrn_string):
+    """ Tidies mrn """
+   
+    n = len(mrn_string)
+    
+    while (n < 9):
+        mrn_string = '0%s' % mrn_string
+        n = len(mrn_string)
+        
+    return mrn_string
 
 ############################################################################
 if __name__ == "__main__":
